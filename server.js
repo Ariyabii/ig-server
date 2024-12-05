@@ -1,11 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const userRoute = require("./routes/userRoutes.js");
-const postRoute = require("./routes/postRoutes.js");
-const likeRoute = require("./routes/likeRoutes.js");
-const commentRoute = require("./routes/commentRoutes.js");
+const userRoute = require("./routes/userRoutes");
+const postRoute = require("./routes/postRoutes");
+const commentRoute = require("./routes/commentRoutes");
 
-const userModel = require("./models/userSchema.js");
 
 const connectDatabase = async () => {
     const res = await mongoose.connect(
@@ -24,7 +22,6 @@ app.use(express.json());
 
 app.use(userRoute);
 app.use(postRoute);
-app.use(likeRoute);
 app.use(commentRoute);
 
 app.listen(PORT, () => {

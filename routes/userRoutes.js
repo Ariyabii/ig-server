@@ -1,7 +1,6 @@
 const Route = require("express");
 const userModel = require("../models/userSchema");
-const postModel = require("../models/postSchema");
-const commentModel = require("../models/commentSchema");
+
 
 const userRoute = Route();
 
