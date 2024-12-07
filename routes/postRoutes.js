@@ -18,7 +18,9 @@ postRoute.post("/post/create", async (req, res) => {
             userId,
         });
         await userModel.findByIdAndUpdate(userId, {
-            $push: { posts: createPost._id, }
+            $push: {
+                posts: createPost._id,
+            },
         });
         res.status(200).json(createPost);
     } catch (error) {
@@ -26,8 +28,18 @@ postRoute.post("/post/create", async (req, res) => {
     }
 });
 
-postRoute.get("/posts", async (req, res) => {
-    const posts = await postModel.find();
+postRoute.get('/posts', async (req, res) => {
+    const posts = await postModel.find().populate("likes", 'username profileImage');
+    res.status(200).json(posts);
+});
+
+postRoute.get('/posts', async (req, res) => {
+    const posts = await postModel.find().populate({
+        path: "likes", populate: {
+            path: "users",
+            select: 'username email',
+        },
+    });
     res.status(200).json(posts);
 });
 
