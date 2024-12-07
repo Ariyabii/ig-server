@@ -2,10 +2,9 @@ const { Schema, default: mongoose } = require("mongoose");
 
 const commentSchema = new Schema(
     {
-        comments: [{ type: mongoose.Types.ObjectId, ref: "comments" }],
-        postId: { type: mongoose.Types.ObjectId, ref: "posts", required: true },
-        userId: { type: mongoose.Types.ObjectId, ref: "users", required: true },
-        likes: [{ type: mongoose.Types.ObjectId, ref: "likes" }],
+        comments: { type: String, required: true },
+        postId: { type: mongoose.Types.ObjectId, required: true },
+        userId: { type: mongoose.Types.ObjectId, required: true },
     },
     { timeStamps: true }
 );

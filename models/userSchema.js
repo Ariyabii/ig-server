@@ -10,7 +10,6 @@ const userSchema = new Schema(
         posts: { type: mongoose.Types.ObjectId, ref: "posts" },
         following: [{ type: mongoose.Types.ObjectId, ref: "users" }],
         followers: [{ type: mongoose.Types.ObjectId, ref: "users" }],
-        // comment: { type: String, required: true },
     },
     { timeStamps: true }
 );

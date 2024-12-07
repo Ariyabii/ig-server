@@ -23,7 +23,8 @@ userRoute.post("/signup", async (req, res) => {
 
 userRoute.get("/user/posts", async (req, res) => {
     try {
-        const posts = await userModel.find().populate("posts", "postImage caption");
+        const posts = await userModel.find()
+            .populate("posts", "postImage caption comments");
         res.status(200).json(posts);
     } catch (error) {
         throw new Error(error);

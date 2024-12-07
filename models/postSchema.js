@@ -5,8 +5,8 @@ const postSchema = new Schema(
         caption: { type: String, required: true },
         profileImage: { type: String, required: true },
         userId: { type: mongoose.Types.ObjectId, ref: "users", required: true },
-        comments: [{ type: mongoose.Types.ObjectId, ref: "comments" }],
         likes: [{ type: mongoose.Types.ObjectId, ref: "likes" }],
+        comments: [{ type: mongoose.Types.ObjectId, ref: "comments" }],
     },
     { timeStamps: true }
 );
