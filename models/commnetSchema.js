@@ -1,12 +1,12 @@
 const { Schema, default: mongoose } = require("mongoose");
 
 const commentSchema = new Schema(
-    {
-        comments: { type: String, required: true },
-        postId: { type: mongoose.Types.ObjectId, required: true },
-        userId: { type: mongoose.Types.ObjectId, required: true },
-    },
-    { timeStamps: true }
+  {
+    comments: { type: String, required: true },
+    postId: { type: mongoose.Types.ObjectId, required: true },
+    userId: { type: mongoose.Types.ObjectId, required: true, ref: "users" },
+  },
+  { timeStamps: true }
 );
 
 const commentModel = mongoose.model("comments", commentSchema);

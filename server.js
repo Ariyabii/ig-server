@@ -12,6 +12,10 @@ const PORT = 8080;
 app.use(cors());
 app.use(express.json());
 
+app.get("/url", (req, res) => {
+  res.send("Resource found");
+});
+
 app.use(userRoute);
 app.use(postRoute);
 app.use(commentRoute);
