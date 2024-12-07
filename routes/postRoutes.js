@@ -11,7 +11,7 @@ postRoute.get("/posts", async (req, res) => {
 
 postRoute.post("/post/create", async (req, res) => {
   try {
-    const { caption, postImage, userId } = req.body;
+    const { caption, profileImage, userId } = req.body;
     const createPost = await postModel.create({
       caption,
       profileImage,
@@ -29,7 +29,9 @@ postRoute.post("/post/create", async (req, res) => {
 });
 
 postRoute.get("/posts", async (req, res) => {
-  const posts = await postModel.find().populate("likes", "username postImage");
+  const posts = await postModel
+    .find()
+    .populate("likes", "username profileImage");
   res.status(200).json(posts);
 });
 
