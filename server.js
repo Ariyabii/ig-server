@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
 const commentRoute = require("./routes/commentRoutes");
+const commentModel = require("./models/commnetSchema");
 dotenv.config();
 
 const app = express();
@@ -30,6 +31,7 @@ connectDatabase();
 app.get("/getCommentsByPostId/:postId", async (req, res) => {
   try {
     const { postId } = req.params;
+    console.log(postId);
 
     const comments = await commentModel
       .find({
