@@ -21,4 +21,20 @@ commentRoute.post("/comment/create", async (req, res) => {
   }
 });
 
+commentRoute.get("/getCommentsByPostId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const comments = await commentModel
+      .find({
+        postId,
+      })
+      .populate("userId");
+
+    return res.send(comments);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 module.exports = commentRoute;

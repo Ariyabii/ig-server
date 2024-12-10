@@ -27,6 +27,22 @@ const connectDatabase = async () => {
 
 connectDatabase();
 
+app.get("/getCommentsByPostId/:postId", async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const comments = await commentModel
+      .find({
+        postId,
+      })
+      .populate("userId");
+
+    return res.send(comments);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`your server is running on ${PORT}`);
 });
