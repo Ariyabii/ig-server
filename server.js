@@ -6,6 +6,10 @@ const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
 const commentRoute = require("./routes/commentRoutes");
 const commentModel = require("./models/commnetSchema");
+
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const userModel = require("./models/userSchema");
 dotenv.config();
 
 const app = express();
@@ -42,6 +46,31 @@ app.get("/getCommentsByPostId/:postId", async (req, res) => {
     return res.send(comments);
   } catch (error) {
     throw new Error(error);
+  }
+});
+
+app.post("/signup", async (req, res) => {
+  const { username, password, email } = req.body;
+  const saltRound = 10;
+  try {
+    const hashedPassword = await bcrypt.hash(password, saltRound);
+
+    const createUser = await userModel.create({
+      username,
+      password: hashedPassword,
+      email,
+    });
+    const token = jwt.sign(
+      {
+        userId: createUser._id,
+        username: createUser.username,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+    res.send({ token });
+  } catch (error) {
+    res.json({ message: `failed to createUser ${error} ` });
   }
 });
 
