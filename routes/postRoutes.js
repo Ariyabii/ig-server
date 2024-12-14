@@ -1,6 +1,7 @@
 const Route = require("express");
 const postModel = require("../models/postSchema");
 const userModel = require("../models/userSchema");
+const authMiddleware = require("../auth-middleware");
 
 const postRoute = Route();
 
@@ -9,7 +10,7 @@ postRoute.get("/posts", async (req, res) => {
   res.status(200).json(posts);
 });
 
-postRoute.post("/post/create", async (req, res) => {
+postRoute.post("/post/create", authMiddleware, async (req, res) => {
   try {
     const { caption, profileImage, userId } = req.body;
     const createPost = await postModel.create({
@@ -28,12 +29,23 @@ postRoute.post("/post/create", async (req, res) => {
   }
 });
 
-postRoute.get("/posts", async (req, res) => {
-  const posts = await postModel
-    .find()
-    .populate("likes", "username profileImage");
-  res.status(200).json(posts);
+postRoute.get("/posts", authMiddleware, async (req, res) => {
+  try {
+    const posts = await postModel
+      .find()
+      .populate("userId", "username profileImage");
+    res.json(posts);
+  } catch (error) {
+    res.status(404).json({ message: `failed to get posts, ${error}` });
+  }
 });
+
+// postRoute.get("/posts", async (req, res) => {
+//   const posts = await postModel
+//     .find()
+//     .populate("likes", "username profileImage");
+//   res.status(200).json(posts);
+// });
 
 postRoute.get("/posts", async (req, res) => {
   const posts = await postModel.find().populate({
