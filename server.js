@@ -5,7 +5,8 @@ const dotenv = require("dotenv");
 const userRoute = require("./routes/userRoutes");
 const postRoute = require("./routes/postRoutes");
 const commentRoute = require("./routes/commentRoutes");
-const commentModel = require("./models/commnetSchema");
+const commentModel = require("./models/commentSchema");
+const authMiddleware = require("./auth-middleware");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -73,6 +74,42 @@ app.post("/signup", async (req, res) => {
     res.json({ message: `failed to createUser ${error} ` });
   }
 });
+
+app.post("/post/create", authMiddleware, async (req, res) => {
+  try {
+    const { caption, postImage, userId } = req.body;
+    const createPost = await postModel.create({
+      caption,
+      postImage,
+      userId,
+    });
+    await userModel.findByIdAndUpdate(userId, {
+      $push: {
+        posts: createPost._id,
+      },
+    });
+    res.status(200).json(createPost);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+// app.post("/comment/create", async (req, res) => {
+//   try {
+//     const { comments, postId, userId } = req.body;
+//     const createComment = await commentModel.create({
+//       comments,
+//       postId,
+//       userId,
+//     });
+//     await postModel.findByIdAndUpdate(postId, {
+//       $push: { comments: createComment._id },
+//     });
+//     res.status(200).json(createComment);
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+// });
 
 app.listen(PORT, () => {
   console.log(`your server is running on ${PORT}`);

@@ -1,14 +1,15 @@
 const Route = require("express");
-const commentModel = require("../models/commnetSchema");
+const commentModel = require("../models/commentSchema");
 const postModel = require("../models/postSchema");
 
 const commentRoute = Route();
 
 commentRoute.post("/comment/create", async (req, res) => {
   try {
-    const { comments, postId, userId } = req.body;
+    const { comments, profileImage, postId, userId } = req.body;
     const createComment = await commentModel.create({
       comments,
+      profileImage,
       postId,
       userId,
     });
