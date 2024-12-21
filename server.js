@@ -11,6 +11,7 @@ const authMiddleware = require("./auth-middleware");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userModel = require("./models/userSchema");
+const postModel = require("./models/postSchema");
 dotenv.config();
 
 const app = express();
@@ -75,6 +76,27 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).send("Email and password are required.");
+  }
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(400).send("Invalid email or password.");
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).send("Invalid email or password.");
+    }
+    const token = jwt.sign({ id: user._id }, { expiresIn: "24h" });
+    res.status(200).json({ message: "Login successful", token });
+  } catch (err) {
+    res.status(500).send("Server error");
+  }
+});
+
 app.post("/post/create", authMiddleware, async (req, res) => {
   try {
     const { caption, postImage, userId } = req.body;
@@ -93,23 +115,6 @@ app.post("/post/create", authMiddleware, async (req, res) => {
     throw new Error(error);
   }
 });
-
-// app.post("/comment/create", async (req, res) => {
-//   try {
-//     const { comments, postId, userId } = req.body;
-//     const createComment = await commentModel.create({
-//       comments,
-//       postId,
-//       userId,
-//     });
-//     await postModel.findByIdAndUpdate(postId, {
-//       $push: { comments: createComment._id },
-//     });
-//     res.status(200).json(createComment);
-//   } catch (error) {
-//     throw new Error(error);
-//   }
-// });
 
 app.listen(PORT, () => {
   console.log(`your server is running on ${PORT}`);

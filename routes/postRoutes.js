@@ -10,24 +10,24 @@ postRoute.get("/posts", async (req, res) => {
   res.status(200).json(posts);
 });
 
-postRoute.post("/post/create", authMiddleware, async (req, res) => {
-  try {
-    const { caption, profileImage, userId } = req.body;
-    const createPost = await postModel.create({
-      caption,
-      profileImage,
-      userId,
-    });
-    await userModel.findByIdAndUpdate(userId, {
-      $push: {
-        posts: createPost._id,
-      },
-    });
-    res.status(200).json(createPost);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
+// postRoute.post("/post/create", authMiddleware, async (req, res) => {
+//   try {
+//     const { caption, postImage, userId } = req.body;
+//     const createPost = await postModel.create({
+//       caption,
+//       profileImage,
+//       userId,
+//     });
+//     await userModel.findByIdAndUpdate(userId, {
+//       $push: {
+//         posts: createPost._id,
+//       },
+//     });
+//     res.status(200).json(createPost);
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+// });
 
 postRoute.get("/posts", authMiddleware, async (req, res) => {
   try {
