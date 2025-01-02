@@ -40,12 +40,12 @@ postRoute.get("/posts", authMiddleware, async (req, res) => {
   }
 });
 
-// postRoute.get("/posts", async (req, res) => {
-//   const posts = await postModel
-//     .find()
-//     .populate("likes", "username profileImage");
-//   res.status(200).json(posts);
-// });
+postRoute.get("/posts", async (req, res) => {
+  const posts = await postModel
+    .find()
+    .populate("likes", "username profileImage");
+  res.status(200).json(posts);
+});
 
 postRoute.get("/posts", async (req, res) => {
   const posts = await postModel.find().populate({
