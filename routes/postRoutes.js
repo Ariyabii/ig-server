@@ -12,10 +12,12 @@ postRoute.get("/posts", async (req, res) => {
 
 // postRoute.post("/post/create", authMiddleware, async (req, res) => {
 //   try {
-//     const { caption, postImage, userId } = req.body;
+//     const { caption, postImage, userId, profileImage, userName } = req.body;
 //     const createPost = await postModel.create({
 //       caption,
 //       profileImage,
+//       postImage,
+//       userName,
 //       userId,
 //     });
 //     await userModel.findByIdAndUpdate(userId, {

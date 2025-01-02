@@ -12,6 +12,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userModel = require("./models/userSchema");
 const postModel = require("./models/postSchema");
+const likeRoute = require("./routes/likeRoute");
 dotenv.config();
 
 const app = express();
@@ -26,6 +27,7 @@ app.get("/url", (req, res) => {
 app.use(userRoute);
 app.use(postRoute);
 app.use(commentRoute);
+app.use(likeRoute);
 
 const connectDatabase = async () => {
   const res = await mongoose.connect(process.env.MONGODB_URI);
@@ -52,7 +54,7 @@ app.get("/getCommentsByPostId/:postId", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, profileImage } = req.body;
   const saltRound = 10;
   try {
     const hashedPassword = await bcrypt.hash(password, saltRound);
@@ -61,6 +63,7 @@ app.post("/signup", async (req, res) => {
       username,
       password: hashedPassword,
       email,
+      profileImage,
     });
     const token = jwt.sign(
       {
@@ -97,13 +100,14 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post("/post/create", authMiddleware, async (req, res) => {
+app.post("/post/create", async (req, res) => {
   try {
-    const { caption, postImage, userId } = req.body;
+    const { caption, postImage, userId, profileImage } = req.body;
     const createPost = await postModel.create({
       caption,
       postImage,
       userId,
+      profileImage,
     });
     await userModel.findByIdAndUpdate(userId, {
       $push: {
@@ -111,6 +115,20 @@ app.post("/post/create", authMiddleware, async (req, res) => {
       },
     });
     res.status(200).json(createPost);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+app.post("/post/like", async (req, res) => {
+  const { postId, userId } = req.body;
+  try {
+    await postModel.findByIdAndUpdate(postId, {
+      $addToSet: {
+        postId: userId,
+      },
+    });
+    res.status(200).json("done");
   } catch (error) {
     throw new Error(error);
   }

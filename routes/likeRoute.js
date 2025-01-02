@@ -1,15 +1,14 @@
-userRoute.post("/user/follow", async (req, res) => {
-  const { followingUserId, followedUserId } = req.body;
-  if (followingUserId === followedUserId) res.status(500).send("cannot");
+const Route = require("express");
+const postModel = require("../models/postSchema");
+
+const likeRoute = Route();
+
+likeRoute.post("post/like", async (req, res) => {
+  const { postId, userId } = req.body;
   try {
-    await userModel.findByIdAndUpdate(followingUserId, {
+    await postModel.findByIdAndUpdate(postId, {
       $addToSet: {
-        following: followedUserId,
-      },
-    });
-    await userModel.findByIdAndUpdate(followedUserId, {
-      $addToSet: {
-        followers: followingUserId,
+        postId: userId,
       },
     });
     res.status(200).json("done");
@@ -17,3 +16,19 @@ userRoute.post("/user/follow", async (req, res) => {
     throw new Error(error);
   }
 });
+
+likeRoute.delete("/unliked", async (req, res) => {
+  const { postId, userId } = req.body;
+  try {
+    await postModel.findByIdAndDelete(postId, {
+      $addToSet: {
+        postId: userId,
+      },
+    });
+    res.status(200).json("done");
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+module.exports = likeRoute;
