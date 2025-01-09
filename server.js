@@ -53,6 +53,23 @@ app.get("/getCommentsByPostId/:postId", async (req, res) => {
   }
 });
 
+app.get("/getProfileId/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log(userId);
+
+    const users = await postModel
+      .find({
+        userId,
+      })
+      .populate("profileImage");
+
+    return res.send(users);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 app.post("/signup", async (req, res) => {
   const { username, password, email, profileImage } = req.body;
   const saltRound = 10;
