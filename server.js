@@ -62,7 +62,7 @@ app.get("/getProfileId/:userId", async (req, res) => {
       .find({
         userId,
       })
-      .populate("profileImage");
+      .populate("userId", "profileImage");
 
     return res.send(users);
   } catch (error) {
@@ -149,6 +149,25 @@ app.post("/post/like", async (req, res) => {
   } catch (error) {
     throw new Error(error);
   }
+});
+
+app.listen(PORT, () => {
+  console.log(`your server is running on ${PORT}`);
+});
+
+app.post("/post/user", async (req, res) => {
+  const { userId } = req.body;
+  try {
+    await postModel.findByIdAndUpdate(postId, {
+      $addToSet: {
+        postId: userId,
+      },
+    });
+    res.status(200).json("done");
+  } catch (error) {
+    throw new Error(error);
+  }
+  å;
 });
 
 app.listen(PORT, () => {
