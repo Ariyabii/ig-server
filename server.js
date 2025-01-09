@@ -167,7 +167,6 @@ app.post("/post/user", async (req, res) => {
   } catch (error) {
     throw new Error(error);
   }
-  å;
 });
 
 app.listen(PORT, () => {
