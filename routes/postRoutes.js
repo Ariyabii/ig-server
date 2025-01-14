@@ -5,10 +5,10 @@ const authMiddleware = require("../auth-middleware");
 
 const postRoute = Route();
 
-postRoute.get("/posts", async (req, res) => {
-  const posts = await postModel.find().populate("userId", "email username _id");
-  res.status(200).json(posts);
-});
+// postRoute.get("/posts", async (req, res) => {
+//   const posts = await postModel.find().populate("userId", "email username _id");
+//   res.status(200).json(posts);
+// });
 
 // postRoute.post("/post/create", authMiddleware, async (req, res) => {
 //   try {
@@ -31,23 +31,39 @@ postRoute.get("/posts", async (req, res) => {
 //   }
 // });
 
-postRoute.get("/posts", authMiddleware, async (req, res) => {
-  try {
-    const posts = await postModel
-      .find()
-      .populate("userId", "username profileImage");
-    res.json(posts);
-  } catch (error) {
-    res.status(404).json({ message: `failed to get posts, ${error}` });
-  }
-});
+// postRoute.get("/posts", authMiddleware, async (req, res) => {
+//   try {
+//     const posts = await postModel
+//       .find()
+//       .populate(
+//         "userId",
+//         "username profileImage",
+//         " bio",
+//         " posts",
+//         "following",
+//         "followers"
+//       );
+//     res.json(posts);
+//   } catch (error) {
+//     res.status(404).json({ message: `failed to get posts, ${error}` });
+//   }
+// });
 
-postRoute.get("/posts", async (req, res) => {
-  const posts = await postModel
-    .find()
-    .populate("likes", "username profileImage");
-  res.status(200).json(posts);
-});
+// postRoute.get("/posts", async (req, res) => {
+//   const posts = await postModel
+//     .find()
+//     .populate(
+//       "likes",
+//       "username profileImage",
+//       "userId",
+//       "username profileImage",
+//       " bio",
+//       " posts",
+//       "following",
+//       "followers"
+//     );
+//   res.status(200).json(posts);
+// });
 
 postRoute.get("/posts", async (req, res) => {
   const posts = await postModel.find().populate({

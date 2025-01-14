@@ -56,25 +56,24 @@ app.get("/getCommentsByPostId/:postId", async (req, res) => {
 app.get("/getProfileId/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    console.log(userId);
-
-    const users = await postModel
-      .find({
-        userId,
-      })
-      .populate(
-        "userId",
-        "profileImage",
-        " username",
-        " bio",
-        " posts",
-        "following",
-        "followers"
-      );
+    const users = await postModel.find({
+      userId,
+    });
 
     return res.send(users);
   } catch (error) {
     throw new Error(error);
+  }
+});
+
+app.get("/posts", authMiddleware, async (req, res) => {
+  try {
+    const posts = await postModel
+      .find()
+      .populate("userId", "username profileImage");
+    res.json(posts);
+  } catch (error) {
+    res.status(404).json({ message: `failed to get posts, ${error}` });
   }
 });
 
